@@ -25,6 +25,7 @@ class UserController extends Controller
 
    public function facebookRedirect(Request $request)
    {
+    //    dd("Asd");
         return Socialite::driver('facebook')->redirect();
 
     //    dd($request->all());
@@ -34,6 +35,22 @@ class UserController extends Controller
    public function facebookCallBack(Request $request)
    {
         $user = Socialite::driver('facebook')->user();
+        dd($user);
+
+    //    dd($request->all());
+   }
+
+   public function microsoftRedirect(Request $request)
+   {
+        return Socialite::driver('microsoft')->redirect();
+
+    //    dd($request->all());
+   }
+
+
+   public function microsoftCallBack(Request $request)
+   {
+        $user = Socialite::driver('microsoft')->user();
         dd($user);
 
     //    dd($request->all());

@@ -27,4 +27,9 @@ Route::middleware(['web'])->prefix('/auth')->group(function () {
         Route::get('/redirect', [UserController::class, 'facebookRedirect']);
         Route::get('/callback',[UserController::class, 'facebookCallBack']);
     });
+
+    Route::prefix('/microsoft')->group(function () {
+        Route::get('/redirect', [UserController::class, 'microsoftRedirect']);
+        Route::get('/callback',[UserController::class, 'microsoftCallBack']);
+    });
 });
