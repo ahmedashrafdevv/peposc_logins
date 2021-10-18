@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Login extends Model
 {
-    use HasFactory;
+    protected $guarded = [];
+
+    /**
+     * Get the user logins.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

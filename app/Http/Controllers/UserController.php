@@ -2,59 +2,76 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Login;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
 class UserController extends Controller
 {
-   public function googleRedirect(Request $request)
-   {
-        return Socialite::driver('google')->redirect();
+    public function redirect($provider)
+    {
+        $err = $this->_validateProvider($provider);
+        if ($err !== null) {
+            return response($err, 400);
+        }
+        return Socialite::driver($provider)->redirect();
+    }
 
-    //    dd($request->all());
-   }
-
-
-   public function googleCallBack(Request $request)
-   {
-        $user = Socialite::driver('google')->user();
-        dd($user);
-
-    //    dd($request->all());
-   }
-
-   public function facebookRedirect(Request $request)
-   {
-    //    dd("Asd");
-        return Socialite::driver('facebook')->redirect();
-
-    //    dd($request->all());
-   }
-
-
-   public function facebookCallBack(Request $request)
-   {
-        $user = Socialite::driver('facebook')->user();
-        dd($user);
-
-    //    dd($request->all());
-   }
-
-   public function microsoftRedirect(Request $request)
-   {
-        return Socialite::driver('microsoft')->redirect();
-
-    //    dd($request->all());
-   }
+    public function callback($provider)
+    {
+        // validate that provider is on of our three allowed providers
+        $err = $this->_validateProvider($provider);
+        if ($err !== null) {
+            return response($err, 400);
+        }
+        $providerUser = Socialite::driver('google')->user();
+        //check if user alread exists
+        $user = User::where('email', $providerUser->getEmail())->first();
+        if ($user == null) {
+            $user = $this->_createUser($providerUser);
+        }
+        $login = [
+            "provider_id" => $providerUser->getId(),
+            "user_id" => $user->id,
+            "provider" => $provider
+        ];
+        Login::create($login);
 
 
-   public function microsoftCallBack(Request $request)
-   {
-        $user = Socialite::driver('microsoft')->user();
-        dd($user);
+        return redirect('/');
+    }
 
-    //    dd($request->all());
-   }
+    
+    public function viewLogins($status)
+    {
+        $logins = Login::get();
+        return response($logins);
+    }
+
+    public function verifyLogin($login)
+    {
+        $login = Login::where('id' , $login);
+        $user = $login->user();
+        // auth()->login($user, true);
+        return response($user);
+    }
+    private function _validateProvider($provider): ?string
+    {
+        $avilableProviders = ['facebook', 'google', 'microsoft'];
+        if (!in_array($provider, $avilableProviders)) {
+            return 'unsupported provider';
+        }
+        return null;
+    }
+    private function _createUser($user)
+    {
+        return User::Create([
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'avatar' => $user->getAvatar()
+        ]);
+    }
 }
 
 

@@ -19,17 +19,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware(['web'])->prefix('/auth')->group(function () {
-    Route::prefix('/google')->group(function () {
-        Route::get('/redirect', [UserController::class, 'googleRedirect']);
-        Route::get('/callback',[UserController::class, 'googleCallBack']);
-    });
-    Route::prefix('/facebook')->group(function () {
-        Route::get('/redirect', [UserController::class, 'facebookRedirect']);
-        Route::get('/callback',[UserController::class, 'facebookCallBack']);
-    });
+    Route::get('{provider}/redirect' , [UserController::class, 'redirect']);
+    Route::get('{provider}/callback' , [UserController::class, 'callBack']);
+    // Route::prefix('/google')->group(function () {
+    //     Route::get('/redirect', [UserController::class, 'googleRedirect']);
+    //     Route::get('/callback',[UserController::class, 'googleCallBack']);
+    // });
+    // Route::prefix('/facebook')->group(function () {
+    //     Route::get('/redirect', [UserController::class, 'facebookRedirect']);
+    //     Route::get('/callback',[UserController::class, 'facebookCallBack']);
+    // });
 
-    Route::prefix('/microsoft')->group(function () {
-        Route::get('/redirect', [UserController::class, 'microsoftRedirect']);
-        Route::get('/callback',[UserController::class, 'microsoftCallBack']);
-    });
+    // Route::prefix('/microsoft')->group(function () {
+    //     Route::get('/redirect', [UserController::class, 'microsoftRedirect']);
+    //     Route::get('/callback',[UserController::class, 'microsoftCallBack']);
+    // });
 });
