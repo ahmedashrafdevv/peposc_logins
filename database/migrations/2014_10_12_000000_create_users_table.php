@@ -16,6 +16,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password');
+            $table->enum('status' , ['pending' , 'approved' , 'declined'])->default('pending');
             $table->string('avatar');
             $table->timestamps();
         });

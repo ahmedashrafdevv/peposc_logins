@@ -5,10 +5,51 @@ namespace App\Http\Controllers;
 use App\Models\Login;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Laravel\Passport\Client;
 use Laravel\Socialite\Facades\Socialite;
 
 class UserController extends Controller
 {
+    public function logout()
+    {
+        auth()->user()->tokens->each(function ($token){
+            $token->delete();
+        });
+
+        return response()->json("logged out successfully",200);
+
+    }
+    public function me(Request $request)
+    {
+        $user = User::with('logins')->find($request->user()->id);
+        // $phones = Phone::where('AccSerial' , $request->user()->id)->select(['phone' , 'id'])->get();
+        // $user->phones = $phones;
+        // dd($request->user()->phones->pluck('Phone')->flatten());
+        // dd($user);
+        return response()->json($user);
+    }
+    protected function login(Request $request){
+        if(!$request->email){
+            return response('please provide the email address' , 400);
+        }
+        $user = User::where('email' , $request->email)->first();
+        if($user == null){
+            return response('please provide valid email address' , 400);
+        }
+        $passwordGrantClient = Client::find(env('PASSPORT_CLIENT_ID', 2));
+        $data = [
+            'grant_type' => 'password',
+            'client_id' => $passwordGrantClient->id,
+            'client_secret' => $passwordGrantClient->secret,
+            'username' => $request->email,
+            'password' => 'default',
+            'scope' => '*',
+        ];
+
+        $req = Request::create('oauth/token' , 'post', $data );
+        $resp = app()->handle($req);
+        return $resp;
+    }
     public function redirect($provider)
     {
         $err = $this->_validateProvider($provider);
@@ -37,16 +78,14 @@ class UserController extends Controller
             "provider" => $provider
         ];
         Login::create($login);
-
-
-        return redirect('/');
+        return redirect()->to(url("$user->email/login"));
     }
 
     
-    public function viewLogins($status)
+    public function viewUsers($status)
     {
-        $logins = Login::get();
-        return response($logins);
+        $users = User::where('status' , $status)->get();
+        return response($users);
     }
 
     public function verifyLogin($login)
@@ -64,11 +103,25 @@ class UserController extends Controller
         }
         return null;
     }
+    public function verifyUser($id , $status){
+        $user = User::find($id);
+        $user->status = $status;
+        $user->save();
+        return response('decliened');
+    }
+
+
+    public function approveLogin($login){
+
+    }
+    
+    
     private function _createUser($user)
     {
         return User::Create([
             'name' => $user->getName(),
             'email' => $user->getEmail(),
+            'password' =>bcrypt('default'),
             'avatar' => $user->getAvatar()
         ]);
     }

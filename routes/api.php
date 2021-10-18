@@ -18,20 +18,13 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware(['web'])->prefix('/auth')->group(function () {
+Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
+Route::get('me' , [UserController::class, 'me'])->middleware('auth:api');
+Route::PUT('verify/{id}/{status}' , [UserController::class, 'verifyUser']);
+Route::PUT('{id}/approve' , [UserController::class, 'approveLogin']);
+Route::POST('login' , [UserController::class, 'login']);
+
+Route::middleware(['web'])->group(function () {
     Route::get('{provider}/redirect' , [UserController::class, 'redirect']);
     Route::get('{provider}/callback' , [UserController::class, 'callBack']);
-    // Route::prefix('/google')->group(function () {
-    //     Route::get('/redirect', [UserController::class, 'googleRedirect']);
-    //     Route::get('/callback',[UserController::class, 'googleCallBack']);
-    // });
-    // Route::prefix('/facebook')->group(function () {
-    //     Route::get('/redirect', [UserController::class, 'facebookRedirect']);
-    //     Route::get('/callback',[UserController::class, 'facebookCallBack']);
-    // });
-
-    // Route::prefix('/microsoft')->group(function () {
-    //     Route::get('/redirect', [UserController::class, 'microsoftRedirect']);
-    //     Route::get('/callback',[UserController::class, 'microsoftCallBack']);
-    // });
 });

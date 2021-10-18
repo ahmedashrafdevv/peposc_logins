@@ -16,4 +16,8 @@ class Login extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:m:s',
+    ];
 }

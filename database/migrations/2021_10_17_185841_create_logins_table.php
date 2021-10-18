@@ -18,7 +18,6 @@ class CreateLoginsTable extends Migration
             $table->string('provider_id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->enum('staus' , ['pending' , 'approved' , 'declined'])->default('pending');
             $table->enum('provider' , ['facebook' , 'google' , 'microsoft']);
             $table->timestamps();
         });

@@ -15,26 +15,29 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return "asd";
-});
+Route::get('/{any}', function(){
+    return view('app');
+})->where('any', '.*');
+
+// Route::view('/' , 'layouts.app');
 
 
-Route::middleware(['guest'])->prefix('auth')->group(function () {
-    Route::view('/' , 'auth');
-    Route::view('/pending' , 'pending');
-    Route::get('{provider}/redirect' , [UserController::class, 'redirect']);
-    Route::get('{provider}/callback' , [UserController::class, 'callBack']);
-});
+
+// Route::middleware(['guest'])->prefix('auth')->group(function () {
+//     Route::view('/' , 'auth');
+//     Route::view('/pending' , 'pending');
+//     Route::get('{provider}/redirect' , [UserController::class, 'redirect']);
+//     Route::get('{provider}/callback' , [UserController::class, 'callBack']);
+// });
 
 
-Route::middleware(['auth'])->prefix('auth')->group(function () {
-    Route::view('/user' , 'user');
-});
+// Route::middleware(['auth'])->prefix('auth')->group(function () {
+//     Route::view('/user' , 'user');
+// });
 
-Route::get('/privacy', function () {
-    return view('privacy');
-});
-Route::get('/terms', function () {
-    return view('privacy');
-});
+// Route::get('/privacy', function () {
+//     return view('privacy');
+// });
+// Route::get('/terms', function () {
+//     return view('privacy');
+// });

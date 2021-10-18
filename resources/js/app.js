@@ -1,32 +1,88 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import 'vue-progress-path/dist/vue-progress-path.css'
+import VueProgress from 'vue-progress-path'
+import App from './views/app.vue'
+import Auth from './views/auth.vue'
+import Admin from './views/admin.vue'
+import User from './views/user.vue'
+import Login from './views/login.vue'
+import Unauthorized from './views/unauthorized.vue'
+import NotFound from './views/notfound.vue'
+import guest from './middlewares/guest'
+import auth from './middlewares/auth'
+import Api from './Api';
+Api.init()
+Vue.use(VueProgress, {
+    defaultShape: 'circle',
+  })
+    Vue.use(VueRouter)
+const router = new VueRouter({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'auth',
+            component: Auth,
+            meta: {
+                middleware:guest
+            }
 
-require('./bootstrap');
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: Admin
 
-window.Vue = require('vue').default;
+        },
+        {
+            path: '/user',
+            name: 'user',
+            component: User,
+            meta: {
+                middleware:auth
+            }
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+        },
+        {
+            path: '/:email/login',
+            name: 'login',
+            component: Login
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+        },
+        {
+            path: '/unauthorized',
+            name: 'unauthorized',
+            component: Unauthorized
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+        },
+        {
+            path: "*",
+            redirect: "/404",
+          },
+          {
+            // the 404 route, when none of the above matches
+            path: "/404",
+            name: "404",
+            component: () =>NotFound,
+          },
+        
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+    ],
 
+});
+
+
+router.beforeEach((to , from , next) => {
+    if (!to.meta.middleware) {
+        return next()
+    }
+    const middleware = to.meta.middleware
+    return middleware(next)
+})
+  
 const app = new Vue({
     el: '#app',
+    components: { App },
+    router,
 });
