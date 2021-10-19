@@ -2379,6 +2379,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: {},
@@ -2405,20 +2409,9 @@ __webpack_require__.r(__webpack_exports__);
     var _this2 = this;
 
     window.addEventListener("storage", function () {
-      var token = localStorage.getItem("token");
-
-      if (token == "failed") {
-        _this2.failed = true;
-        localStorage.removeItem("token");
-      }
-
-      if (token && token != "failed") {
-        _this2.failed = false;
-
-        _this2.$router.push({
-          name: "user"
-        });
-      }
+      _this2.$router.push({
+        name: "user"
+      });
     });
   }
 });
@@ -2436,36 +2429,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Api */ "./resources/js/Api.js");
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 //
 //
-
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mounted: function mounted() {
-    var _this = this;
-
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              (0,_Api__WEBPACK_IMPORTED_MODULE_1__.login)(_this.$route.params.email);
-
-            case 1:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
+  created: function created() {
+    localStorage.setItem("token", this.$route.params.token);
+    setTimeout(function () {
+      window.close();
+    }, 300);
   }
 });
 
@@ -2634,7 +2607,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "getUser": () => (/* binding */ getUser),
-/* harmony export */   "login": () => (/* binding */ login),
 /* harmony export */   "redirect": () => (/* binding */ redirect),
 /* harmony export */   "verifyAuth": () => (/* binding */ verifyAuth),
 /* harmony export */   "verify": () => (/* binding */ verify),
@@ -2694,23 +2666,6 @@ var getUser = function getUser() {
     vue__WEBPACK_IMPORTED_MODULE_3__["default"].axios.get("me").then(function (res) {
       resolve(res.data);
     })["catch"](function (err) {
-      reject(err);
-    });
-  });
-};
-var login = function login(email) {
-  return new Promise(function (resolve, reject) {
-    vue__WEBPACK_IMPORTED_MODULE_3__["default"].axios.post("login", {
-      email: email
-    }).then(function (res) {
-      var token = res.data.access_token;
-      localStorage.setItem("token", token);
-      setTimeout(function () {
-        window.close();
-      }, 1000000);
-      window.close(); // this.$router.push({name : 'user'})
-    })["catch"](function (err) {
-      localStorage.setItem("token", 'failed');
       reject(err);
     });
   });
@@ -2806,7 +2761,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_8__["default"]({
       middleware: _middlewares_auth__WEBPACK_IMPORTED_MODULE_7__["default"]
     }
   }, {
-    path: '/:email/login',
+    path: '/login/:token',
     name: 'login',
     component: _views_login_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   }, {
@@ -5605,7 +5560,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("h2", [_vm._v("asd")])
 }
 var staticRenderFns = []
 render._withStripped = true

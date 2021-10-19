@@ -1,10 +1,14 @@
-<template></template>
+<template>
+  <h2>asd</h2>
+</template>
 
 <script>
-import { login } from "../Api";
 export default {
-  async mounted() {
-    login(this.$route.params.email);
+  created() {
+    localStorage.setItem("token", this.$route.params.token);
+    setTimeout(() => {
+      window.close();
+    }, 300);
   },
 };
 </script>

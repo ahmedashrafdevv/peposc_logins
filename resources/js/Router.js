@@ -35,7 +35,7 @@ const router = new VueRouter({
 
         },
         {
-            path: '/:email/login',
+            path: '/login/:token',
             name: 'login',
             component: Login
 

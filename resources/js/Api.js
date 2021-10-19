@@ -52,23 +52,7 @@ export const getUser = () => {
             });
     });
 };
-export const login = email => {
-    return new Promise((resolve, reject) => {
-        Vue.axios
-            .post(`login`, { email })
-            .then(res => {
-                const token = res.data.access_token;
-                localStorage.setItem("token", token);
-                setTimeout(() => {window.close()} , 1000000)
-                window.close();
-                // this.$router.push({name : 'user'})
-            })
-            .catch(err => {
-                localStorage.setItem("token", 'failed');
-                reject(err);
-            });
-    });
-};
+
 export const redirect = driver => {
     return new Promise((resolve, reject) => {
         Vue.axios

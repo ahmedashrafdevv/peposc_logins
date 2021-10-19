@@ -103,7 +103,11 @@
         </svg>
         FACEBOOK
       </a>
-      <a href="#" @click.prevent="redirect('microsoft')" class="button micorsoft">
+      <a
+        href="#"
+        @click.prevent="redirect('microsoft')"
+        class="button micorsoft"
+      >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
           <path fill="#f3f3f3" d="M0 0h23v23H0z" />
           <path fill="#f35325" d="M1 1h10v10H1z" />
@@ -142,15 +146,7 @@ export default {
   },
   created() {
     window.addEventListener("storage", () => {
-      const token = localStorage.getItem("token");
-      if (token == "failed") {
-        this.failed = true;
-        localStorage.removeItem("token");
-      }
-      if (token && token != "failed") {
-        this.failed = false;
-        this.$router.push({ name: "user" });
-      }
+      this.$router.push({ name: "user" });
     });
   },
 };

@@ -1,28 +1,27 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
-Route::get('me' , [UserController::class, 'me'])->middleware('auth:api');
-Route::get('verify/auth' , [UserController::class, 'verifyAuth'])->middleware('auth:api');
-Route::PUT('verify/{id}/{status}' , [UserController::class, 'verifyUser']);
-Route::PUT('{id}/approve' , [UserController::class, 'approveLogin']);
-Route::POST('login' , [UserController::class, 'login']);
 
+
+// we are using web middleware because socialite package return error if we don't
+// basically its because som session errors
 Route::middleware(['web'])->group(function () {
     Route::get('{provider}/redirect' , [UserController::class, 'redirect']);
     Route::get('{provider}/callback' , [UserController::class, 'callBack']);
 });
+Route::middleware(['auth:api'])->group(function () {
+    // verify auth is a simple function makes sure that user token is valid
+    Route::get('verify/auth' , [AuthController::class, 'verifyAuth'])->middleware('auth:api');
+    Route::get('me' , [AuthController::class, 'me']);
+    Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
+});
+
+// admin routes
+// i should use middleware here but you didn't say anything about multi auth on the task so 
+// the admin url is public which is illogic
+
+Route::PUT('verify/{id}/{status}' , [UserController::class, 'verifyUser']);
+Route::PUT('{id}/approve' , [UserController::class, 'approveLogin']);
