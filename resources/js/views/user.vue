@@ -1,12 +1,13 @@
 <template>
-  <div class="container">
-    <div v-if="loading">loading</div>
+  <div class="container text-center">
+    <div v-if="loading"><loading /></div>
     <div v-else-if="userInfo.status == 'pending'">
       <h2>
-        Your account is on pending status it will be approved from one of our team
-        shortly
+        Your account is on pending status it will be approved from one of our
+        team shortly
       </h2>
-      <a href="#" class="button" @click.prevent="getUser()">
+      <a href="#" :class="`button ${retryLoading ? 'btn-loading' : ''}`" @click.prevent="me()">
+        <div class="lds-ellipsis" v-if="retryLoading"><div></div><div></div><div></div><div></div></div>
         <svg
           height="50px"
           id="SVGRoot"
@@ -33,18 +34,22 @@
         Retry
       </a>
     </div>
-     <div v-else-if="userInfo.status == 'declined'">
-      <h2>
-        Sorry ! your request was declined
-      </h2>
-     </div>
+    <div v-else-if="userInfo.status == 'declined'">
+      <h2>Sorry ! your request was declined</h2>
+    </div>
     <div v-else>
-      <h2>Hello to peposc</h2>
-      <ul>
+      <div class="user">
+        <img :src="userInfo.avatar" alt="" />
+        <div class="user__info">
+          <h2>{{ userInfo.name }}</h2>
+          <h4>{{ userInfo.email }}</h4>
+        </div>
+      </div>
+      <!-- <ul>
         <li v-for="key in Object.keys(userInfo)" :key="key">
           {{ key }} : {{ userInfo[key] }}
         </li>
-      </ul>
+      </ul> -->
 
       <h2>
         you have logged in {{ userInfo.logins.length }} (time/s) to our system
@@ -56,37 +61,54 @@
           <th>Time</th>
         </tr>
         <tr v-for="login in userInfo.logins" :key="login.id">
-          <td>{{ login.created_at }}</td>
-          <td>{{ login.updated_at }}</td>
+          <td>{{ login.created_at | date }}</td>
+          <td>{{ login.created_at | time }}</td>
         </tr>
       </table>
     </div>
   </div>
 </template>
 <script>
-import {getUser} from "../Api";
+import { getUser } from "../Api";
+import Loading from "../components/Loading.vue";
 export default {
   data() {
     return {
       loading: true,
+      retryLoading: false,
       userInfo: {},
     };
   },
-  methods:{
-    me(){
+  components: {
+    Loading,
+  },
+  filters: {
+    date: (stamp) => {
+      return stamp.split(" ")[0];
+    },
+    time: (stamp) => {
+      return stamp.split(" ")[1];
+    },
+  },
+  methods: {
+    me() {
+      this.retryLoading = true;
       getUser()
-      .then((res) => {
-        this.userInfo = res;
-        this.loading = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        this.$router.push("/");
-      });
-    }
+        .then((res) => {
+          this.userInfo = res;
+          setTimeout(() => {
+            this.retryLoading = false;
+            this.loading = false;
+          } , 100)
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$router.push("/");
+        });
+    },
   },
   async created() {
-    await this.me()
+    await this.me();
   },
 };
 </script>

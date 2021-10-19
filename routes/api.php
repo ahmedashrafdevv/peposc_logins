@@ -15,11 +15,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
 Route::get('me' , [UserController::class, 'me'])->middleware('auth:api');
+Route::get('verify/auth' , [UserController::class, 'verifyAuth'])->middleware('auth:api');
 Route::PUT('verify/{id}/{status}' , [UserController::class, 'verifyUser']);
 Route::PUT('{id}/approve' , [UserController::class, 'approveLogin']);
 Route::POST('login' , [UserController::class, 'login']);

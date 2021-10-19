@@ -50,13 +50,18 @@ class UserController extends Controller
         $resp = app()->handle($req);
         return $resp;
     }
+    public function verifyAuth()
+    {
+        return true;
+    }
     public function redirect($provider)
     {
         $err = $this->_validateProvider($provider);
         if ($err !== null) {
             return response($err, 400);
         }
-        return Socialite::driver($provider)->redirect();
+        $url = Socialite::driver($provider)->redirect();
+        return $url->getTargetUrl();
     }
 
     public function callback($provider)

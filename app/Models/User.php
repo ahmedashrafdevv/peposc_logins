@@ -21,7 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'avatar',
+        'status',
         "password"
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:m:s',
     ];
 
     /**
