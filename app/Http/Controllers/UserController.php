@@ -37,25 +37,32 @@ class UserController extends Controller
             "provider" => $provider
         ];
         Login::create($login);
-
-        $passwordGrantClient = Client::find(env('PASSPORT_CLIENT_ID', 2));
-        $data = [
-            'grant_type' => 'password',
-            'client_id' => $passwordGrantClient->id,
-            'client_secret' => $passwordGrantClient->secret,
-            'username' => $user->email,
-            'password' => 'default',
-            'scope' => '*',
-        ];
-        $req = Request::create('oauth/token' , 'post', $data );
-        // this line actually execute the request
-        $resp = app()->handle($req);
-        $token = json_decode($resp->getContent())->access_token;
+        // call login to get access token
+        $token = $this->_login($user->email);
         // and finally redirect to the vue app again in login route which will perform login request
         // and save the token in localstorge
         $appUrl = env('APP_URL');
         $redirecUrl = $appUrl . 'login/' . $token;
         return redirect()->to($redirecUrl);
+    }
+
+    private function _login($email)
+    {
+        $passwordGrantClient = Client::find(env('PASSPORT_CLIENT_ID', 2));
+
+        // prepare data to call passport endpoint
+        $data = [
+            'grant_type' => 'password',
+            'client_id' => $passwordGrantClient->id,
+            'client_secret' => $passwordGrantClient->secret,
+            'username' => $email,
+            'password' => 'default',
+            'scope' => '*',
+        ];
+        $req = Request::create('oauth/token' , 'post', $data );
+        // this line executes the request
+        $resp = app()->handle($req);
+        return json_decode($resp->getContent())->access_token;
     }
 
     
