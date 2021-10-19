@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+    width          : 100%;
+
+    @media(max-width:700px) {
+        overflow: scroll;
+        display : inline-block;
+    }
+
+    & svg {
+        width: 30px;
+    }
+
+    & .button {
+        @media(max-width:900px) {
+            min-width: initial !important;
+        }
+    }
+
+    & td,
+    & th {
+        border    : 1px solid var(--bg-color);
+        text-align: center;
+        padding   : 8px;
+    }
+
+    & tr:not(:first-child) {
+        transition: background .3s;
+        &:nth-child(even) {
+            background-color: var(--bg-color);
+        }
+        :nth-child(odd) {
+            background-color: #fff;
+        }
+        
+    }
+
+}

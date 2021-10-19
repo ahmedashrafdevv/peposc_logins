@@ -1,0 +1,63 @@
+.buttons {
+    display: flex;
+
+    @media(max-width:1000px) {
+        flex-direction: column;
+    }
+
+}
+.button {
+    @include flex-center;
+    background-color: var(--primary-color);
+    box-shadow      : var(--box-shadow);
+    cursor          : pointer;
+    padding         : 10px 20px;
+    color           : #fff;
+    border-radius   : 5px;
+    min-width       : 300px;
+    max-height: 45px;
+    transition: all .3s ease-in;
+
+    &:hover{
+        opacity: .8;
+        transform: scale(1.01);
+    }
+    &:active , &:visited{
+        transform: scale(.98);
+
+    }
+    &.btn-loading {
+        color: var(--primary-color);
+        &.danger {
+            color:  var(--danger);
+        }
+        &.success {
+            color: var(--success);
+        }
+        & svg {
+            animation: lds-circle 10s linear infinite;
+
+        }
+    }
+    &:not(:last-child) {
+        margin-right: 10px;
+        @media(max-width:1000px) {
+            margin-right : 0;
+            margin-bottom: 10px;
+        }
+    }
+    &.facebook{
+        background-color: var(--facebook);
+    }
+    &.microsoft{
+        background-color: var(--microsoft);
+    }
+    
+    &.google{
+        background-color: var(--google);
+    }
+
+    @media(max-width:400px) {
+        min-width: 250px;
+    }
+}

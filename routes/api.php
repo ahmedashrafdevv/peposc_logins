@@ -16,12 +16,12 @@ Route::middleware(['auth:api'])->group(function () {
     // verify auth is a simple function makes sure that user token is valid
     Route::get('verify/auth' , [AuthController::class, 'verifyAuth'])->middleware('auth:api');
     Route::get('me' , [AuthController::class, 'me']);
-    Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
 });
 
 // admin routes
 // i should use middleware here but you didn't say anything about multi auth on the task so 
 // the admin url is public which is illogic
 
+Route::get('users/{status?}' , [UserController::class, 'viewUsers']);
 Route::PUT('verify/{id}/{status}' , [UserController::class, 'verifyUser']);
 Route::PUT('{id}/approve' , [UserController::class, 'approveLogin']);

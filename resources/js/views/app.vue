@@ -4,7 +4,7 @@
     <nav class="nav" v-show="$route.name != 'unauthorized'">
       <div class="container">
         <div class="nav__wrapper">
-          <div class="logo">
+          <div class="logo" @click.prevent="$router.push('/')">
             <img src="/images/pepo-logo.png" alt="" />
           </div>
           <div class="logout"  @click.prevent="logout" v-if="$route.name != 'auth'">

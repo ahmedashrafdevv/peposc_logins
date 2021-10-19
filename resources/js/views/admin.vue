@@ -1,52 +1,32 @@
 <template>
-  <div class="container">
+  <div class="container min-h-80-sc">
     <div v-if="loading"><loading /></div>
-    <div v-else-if="users.length == 0">
+    <!-- <div v-else-if="users.length == 0">
       <h2 class="text-center">No users yet</h2>
       <a href="#" @click.prevent="getUsers" class="button text-center">
-        <svg
-          height="50px"
-          id="SVGRoot"
-          version="1.1"
-          viewBox="0 0 16 16"
-          width="50px"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:cc="http://creativecommons.org/ns#"
-          xmlns:dc="http://purl.org/dc/elements/1.1/"
-          xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-          xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-          xmlns:svg="http://www.w3.org/2000/svg"
-        >
-          <defs id="defs37" />
-          <g id="layer1">
-            <path
-              d="M 7.9375,1.625 A 6.03125,6.03125 0 0 0 2.5585938,4.9375 H 4.2246094 A 4.6081461,4.6081461 0 0 1 7.9375,3.0488281 4.6081461,4.6081461 0 0 1 12.474609,6.8769531 L 11.1875,6.875 12.154297,8.5585938 13.119141,10.240234 14.09375,8.5625 15.068359,6.8847656 13.912109,6.8808594 A 6.03125,6.03125 0 0 0 7.9375,1.625 Z M 3.1328125,5.8125 2.1582031,7.4902344 1.1835938,9.1679688 l 1.15625,0.00391 a 6.03125,6.03125 0 0 0 5.9746093,5.255859 6.03125,6.03125 0 0 0 5.3789059,-3.3125 H 12.027344 A 4.6081461,4.6081461 0 0 1 8.3144531,13.003906 4.6081461,4.6081461 0 0 1 3.7773438,9.1757812 l 1.2871093,0.00195 -0.9667969,-1.6835938 z"
-              id="path53"
-              style="fill: #fff; stroke: none; stroke-width: 1.08426964"
-            />
-          </g>
-        </svg>
+        <svgheight="50px"id="SVGRoot"version="1.1"viewBox="0 0 16 16"width="50px"xmlns="http://www.w3.org/2000/svg"xmlns:cc="http://creativecommons.org/ns#"xmlns:dc="http://purl.org/dc/elements/1.1/"xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"xmlns:svg="http://www.w3.org/2000/svg"><defs id="defs37" /><g id="layer1"><pathd="M 7.9375,1.625 A 6.03125,6.03125 0 0 0 2.5585938,4.9375 H 4.2246094 A 4.6081461,4.6081461 0 0 1 7.9375,3.0488281 4.6081461,4.6081461 0 0 1 12.474609,6.8769531 L 11.1875,6.875 12.154297,8.5585938 13.119141,10.240234 14.09375,8.5625 15.068359,6.8847656 13.912109,6.8808594 A 6.03125,6.03125 0 0 0 7.9375,1.625 Z M 3.1328125,5.8125 2.1582031,7.4902344 1.1835938,9.1679688 l 1.15625,0.00391 a 6.03125,6.03125 0 0 0 5.9746093,5.255859 6.03125,6.03125 0 0 0 5.3789059,-3.3125 H 12.027344 A 4.6081461,4.6081461 0 0 1 8.3144531,13.003906 4.6081461,4.6081461 0 0 1 3.7773438,9.1757812 l 1.2871093,0.00195 -0.9667969,-1.6835938 z"id="path53"style="fill: #fff; stroke: none; stroke-width: 1.08426964"/></g></svg>
         Retry
       </a>
-    </div>
+    </div> -->
     <div v-else>
       <h2 class="text-center">Please approve or decline these users</h2>
+      <div class="buttons mb-4">
+        <h2 class="mr-4 my-0">show : </h2>
+        <a class="button" href="#" @click.prevent="this.status = 'all'">all</a>
+        <a class="button" href="#" @click.prevent="this.status = 'pending'">pending</a>
+        <a class="button" href="#" @click.prevent="this.status = 'approved'">approved</a>
+        <a class="button" href="#" @click.prevent="this.status = 'declined'">declined</a>
+      </div>
       <table>
         <tr>
-          <th>Id</th>
-          <th>Email</th>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>actions</th>
+          <th v-for="header in headers" :key="header.key">{{header.key}}</th>
+          <th >actions</th>
+        </tr>
+        <tr v-if="users.length == 0">
+          <td colspan="6">no users</td>
         </tr>
         <tr v-for="user in users" :key="user.email">
-          <td>{{ user.id }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.status }}</td>
-          <td>{{ user.created_at }}</td>
+          <td  v-for="header in headers" :key="header.value">{{ user[header.value] }}</td>
           <td class="flex justify-center">
             <div class="buttons">
               <a
@@ -83,11 +63,25 @@ export default {
       loading: true,
       verifyLoading: false,
       status: "pending",
+      headers : [
+        {key : 'Id',value : 'id'},
+        {key : 'Email',value : 'email'},
+        {key : 'Name',value : 'name'},
+        {key : 'Status',value : 'status'},
+        {key : 'Date',value : 'created_at'}
+      ],
       users: [],
     };
   },
   components: {
     Loading,
+  },
+  watch:{
+    status:{
+      handler() {
+        this.getUsers()
+      }
+    }
   },
   methods: {
     verify(id, status) {

@@ -1,0 +1,30 @@
+.nav {
+    background-color: var(--bg-color);
+    box-shadow      : var(--box-shadow);
+    margin-bottom   : 10px;
+    height          : 80px;
+
+    &__wrapper {
+        @include flex-space-between;
+
+        & .logo {
+            cursor: pointer;
+
+            & img {
+                height: 50px;
+            }
+        }
+
+        & .logout {
+            cursor        : pointer;
+            @include flex-center-column
+        }
+
+        & svg {
+            fill        : var(--text-color);
+            height      : 30px;
+            margin-right: 0;
+
+        }
+    }
+}

@@ -1,0 +1,12 @@
+
+footer {
+    width : 100vw;
+    height: 60px;
+    bottom: 0;
+    @include flex-center;
+    text-align      : center;
+    background-color: var(--bg-color);
+    margin-top      : 10px;
+    box-shadow      : var(--box-shadow);
+  
+  }

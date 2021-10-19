@@ -6,6 +6,7 @@ export default function auth(next) {
             name: "unauthorized"
         });
     }
+    // verify auth is a simple check to approve that the token is valid
     verifyAuth()
         .then(() => {
             next();
@@ -16,6 +17,5 @@ export default function auth(next) {
                 name: "unauthorized"
             });
         });
-
     return next();
 }

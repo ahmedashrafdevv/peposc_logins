@@ -1,0 +1,13 @@
+.user{
+    @include  flex-center-column;
+    & img{
+        border-radius: 50%;
+    }
+    &__info{
+        margin-top: 10px;
+        text-align: center;
+        & h2 , h4{
+            margin: 0;
+        }
+    }
+}
